@@ -7,11 +7,6 @@ import zmq
 class wordle(Process):
     # initialise wordle class
     def __init__(self, wordList: List[str] = [], maxtries: int = 6):
-        Process.__init__(self)
-        context = zmq.Context()
-        self.socket = context.socket(zmq.PAIR)
-        self.socket.connect("tcp://localhost:5555")
-
         self.wordList = wordList
         self.maxtries = maxtries
 
