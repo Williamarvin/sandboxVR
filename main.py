@@ -39,8 +39,24 @@ def wordle(wordList: List[str] = [], maxtries: int = 6) -> bool:
 
         # if word input is in the list
         if wordInput.lower() in wordList:
+            output = []
             # check if hit, present or miss
-            pass
+            for index in range(5):
+
+                # if hit
+                if wordInput[index] == answer[index]:
+                    output.append(0)
+
+                # if present
+                elif wordInput[index] in answer:
+                    output.append(1)
+
+                # if miss
+                else:
+                    output.append(2)
+
+            # print the board based on hit, present or miss
+            drawBoard(output)
 
     # Failed so return false
     return False
@@ -48,7 +64,7 @@ def wordle(wordList: List[str] = [], maxtries: int = 6) -> bool:
 
 if __name__ == "__main__":
     words = ["hello", "world", "fresh", "crazy", "quite", "fancy"]
-    maxtries = 2
+    maxtries = 6
 
     success = wordle(wordList=words, maxtries=maxtries)
 
