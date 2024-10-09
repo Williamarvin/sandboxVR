@@ -56,7 +56,7 @@ class wordle(Process):
 
     # Start wordle game
     def start(self) -> bool:
-        if self.wordList == []:
+        if self.wordList == [] or self.maxtries == 0:
             return False
 
         # choose random answer from wordList
