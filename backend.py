@@ -59,4 +59,29 @@ class wordle(Process):
         answer = random.choice(self.wordList)
 
         for i in range(self.maxtries):
-            pass
+            
+            # wait for client answer
+            wordInput = self.socket.recv_string()
+
+            # if client answer not in word list
+            while wordInput not in self.wordList:
+                self.socket.send_string("error")
+                wordInput = self.socket.recv_string()
+
+            # if guess is correct then return success
+            if wordInput == answer:
+                self.socket.send_string("success")
+                break
+            
+            # if guess is incorect then continue
+            elif wordInput in self.wordList:
+                self.socket.send_string("continue")
+
+            # check for hit, present or miss to compare user input and answer
+            output = self.checker(wordInput, answer)
+
+            # print the board based on hit, present or miss
+            self.drawBoard(output)
+
+        # exceed max tries
+        self.socket.send_string("failed")

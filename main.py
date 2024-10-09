@@ -15,9 +15,22 @@ if __name__ == "__main__":
     t1 = threading.Thread(target=wordleObj.run)
     t1.start()
 
-    # check if success
-    if success:
-        print("wordle success")
+    while True:
+        # send input to server
+        wordInput = input("Please input a word to the wordle: ")
+        client.send_string(wordInput)
+        response = client.recv_string()
 
-    elif not success:
-        print("Wordle failed")
+        # if response from server is success, win the game
+        if response == "success":
+            print("wordle success")
+            break
+        
+        # if response from server is failed, lose the game
+        elif response == "failed":
+            print("wordle fails")
+            break
+        
+        # else response from server something else, continue 
+        else:
+            continue
