@@ -7,6 +7,10 @@ import zmq
 class wordle(Process):
     # initialise wordle class
     def __init__(self, wordList: List[str] = [], maxtries: int = 6):
+        context = zmq.Context()
+        self.server = context.socket(zmq.PAIR)
+        self.server.connect("tcp://localhost:5555")
+        
         self.wordList = wordList
         self.maxtries = maxtries
 
@@ -59,23 +63,23 @@ class wordle(Process):
         answer = random.choice(self.wordList)
 
         for i in range(self.maxtries):
-            
+
             # wait for client answer
-            wordInput = self.socket.recv_string()
+            wordInput = self.server.recv_string()
 
             # if client answer not in word list
             while wordInput not in self.wordList:
-                self.socket.send_string("error")
-                wordInput = self.socket.recv_string()
+                self.server.send_string("error")
+                wordInput = self.server.recv_string()
 
             # if guess is correct then return success
             if wordInput == answer:
-                self.socket.send_string("success")
+                self.server.send_string("success")
                 break
-            
+
             # if guess is incorect then continue
             elif wordInput in self.wordList:
-                self.socket.send_string("continue")
+                self.server.send_string("continue")
 
             # check for hit, present or miss to compare user input and answer
             output = self.checker(wordInput, answer)
@@ -84,4 +88,4 @@ class wordle(Process):
             self.drawBoard(output)
 
         # exceed max tries
-        self.socket.send_string("failed")
+        self.server.send_string("failed")

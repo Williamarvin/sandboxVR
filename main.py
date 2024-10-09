@@ -25,12 +25,12 @@ if __name__ == "__main__":
         if response == "success":
             print("wordle success")
             break
-        
+
         # if response from server is failed, lose the game
         elif response == "failed":
             print("wordle fails")
             break
-        
-        # else response from server something else, continue 
+
+        # else response from server something else, continue
         else:
             continue
