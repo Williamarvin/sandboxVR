@@ -1,5 +1,6 @@
 from typing import List
 import random
+import zmq
 
 
 class wordle:
@@ -46,6 +47,31 @@ class wordle:
                 output.append(2)
 
         return output
+
+    # Start wordle game
+    def playWordle(self) -> bool:
+        if self.wordList == []:
+            return False
+
+        # choose random answer from wordList
+        answer = random.choice(self.wordList)
+
+        for round in range(self.maxtries):
+
+            wordInput = input("Please input a word to the wordle: ")
+
+            while wordInput.lower() not in self.wordList:
+                wordInput = input("Please enter a 5 letter word from the list")
+
+            # if correct, then return true
+            if wordInput == answer:
+                return True
+
+            # check for hit, present or miss to compare user input and answer
+            output = self.checker(wordInput, answer)
+
+            # print the board based on hit, present or miss
+            self.drawBoard(output)
 
         # Failed so return false
         return False
