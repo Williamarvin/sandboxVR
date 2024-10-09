@@ -27,43 +27,25 @@ class wordle:
                 board.append('_')
 
         print(''.join(board))
+    
+    def checker(self, wordInput, answer) -> List[int]:
+        output = []
+        # check if hit, present or miss
+        for index in range(5):
 
-    # Start wordle game
-    def playWordle(self) -> bool:
-        if self.wordList == []:
-            return False
+            # if hit
+            if wordInput[index] == answer[index]:
+                output.append(0)
 
-        # choose random answer from wordList
-        answer = random.choice(self.wordList)
+            # if present
+            elif wordInput[index] in answer:
+                output.append(1)
 
-        for round in range(self.maxtries):
+            # if miss
+            else:
+                output.append(2)
 
-            wordInput = input("Please input a word to the wordle: ")
-
-            # if correct, then return true
-            if wordInput == answer:
-                return True
-
-            # if word input is in the list
-            if wordInput.lower() in self.wordList:
-                output = []
-                # check if hit, present or miss
-                for index in range(5):
-
-                    # if hit
-                    if wordInput[index] == answer[index]:
-                        output.append(0)
-
-                    # if present
-                    elif wordInput[index] in answer:
-                        output.append(1)
-
-                    # if miss
-                    else:
-                        output.append(2)
-
-                # print the board based on hit, present or miss
-                self.drawBoard(output)
+        return output
 
         # Failed so return false
         return False
