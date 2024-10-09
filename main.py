@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
     wordleObj = wordle(wordList=words, maxtries=maxtries)
 
-    t1 = threading.Thread(target=wordleObj.run)
+    t1 = threading.Thread(target=wordleObj.start)
     t1.start()
 
     while True:

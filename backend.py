@@ -55,7 +55,7 @@ class wordle(Process):
         return output
 
     # Start wordle game
-    def run(self) -> bool:
+    def start(self) -> bool:
         if self.wordList == []:
             return False
 
