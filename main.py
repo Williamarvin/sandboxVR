@@ -2,6 +2,26 @@ from typing import List
 import random
 
 
+# HIT 0 = 0
+# Present 1 = ?
+# Miss 2 = _
+def drawBoard(indexList: List[int] = []):
+    board = []
+
+    for index in indexList:
+        # Hit
+        if index == 0:
+            board.append('0')
+        # Present
+        elif index == 1:
+            board.append('?')
+        # MISS
+        elif index == 2:
+            board.append('_')
+
+    print(''.join(board))
+
+
 def wordle(wordList: List[str] = [], maxtries: int = 6) -> bool:
     if wordList == []:
         return False
