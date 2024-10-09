@@ -16,6 +16,9 @@ if __name__ == "__main__":
     t1.start()
 
     while True:
+        if words == [] or maxtries == 0:
+            print("max tries 0 or words list have no words")
+        
         # send input to server
         wordInput = input("Please input a word to the wordle: ")
         client.send_string(wordInput)
