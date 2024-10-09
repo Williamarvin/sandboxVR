@@ -11,7 +11,9 @@ if __name__ == "__main__":
     maxtries = 6
 
     wordleObj = wordle(wordList=words, maxtries=maxtries)
-    success = wordleObj.playWordle()
+
+    t1 = threading.Thread(target=wordleObj.run)
+    t1.start()
 
     # check if success
     if success:
