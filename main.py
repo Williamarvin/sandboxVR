@@ -3,18 +3,20 @@ import zmq
 import threading
 
 if __name__ == "__main__":
-    context = zmq.Context()
-    client = context.socket(zmq.PAIR)
-    client.bind("tcp://*:5555")
-
+    # configuration
     words = ["hello", "world", "fresh", "crazy", "quite", "fancy"]
     maxtries = 6
-
+    
+    # server initialisation
     wordleObj = wordle(wordList=words, maxtries=maxtries)
+    wordleThread = threading.Thread(target=wordleObj.start)
+    wordleThread.start()
+    
     # client initialisation
     context = zmq.Context()
     client = context.socket(zmq.PAIR)
     client.connect("tcp://localhost:5555")
+
 
     while True:
         if words == [] or maxtries == 0:
@@ -31,7 +33,7 @@ if __name__ == "__main__":
             print("wordle success")
             break
 
-        # if response from server is failed, lose the game
+        # elif response from server is failed, lose the game
         elif response == "failed":
             print("wordle fails")
             break
@@ -39,3 +41,6 @@ if __name__ == "__main__":
         # else response from server something else, continue
         else:
             continue
+        
+    # terminate thread
+    wordleThread.join()

@@ -79,7 +79,10 @@ class wordle(Process):
                 break
 
             # if guess is incorect then continue
-            elif wordInput in self.wordList:
+            elif i+1 == self.maxtries:
+                self.server.send_string("failed")
+            
+            else:
                 self.server.send_string("continue")
 
             # check for hit, present or miss to compare user input and answer
