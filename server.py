@@ -92,5 +92,3 @@ class wordleServer():
 
         # exceed max tries
         self.server.send_string("failed")
-
-

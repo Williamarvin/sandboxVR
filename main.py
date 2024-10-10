@@ -6,7 +6,7 @@ import threading
 if __name__ == "__main__":
     # configuration
     wordList = ["hello", "world", "fresh", "crazy", "quite", "fancy"]
-    maxtries = 0
+    maxtries = 6
 
     # server initialisation
     server = wordleServer(wordList=wordList, maxtries=maxtries)
