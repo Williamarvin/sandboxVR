@@ -3,7 +3,7 @@ import random
 import zmq
 
 
-class wordle():
+class wordleServer():
     # initialise wordle class
     def __init__(self, wordList: List[str] = [], maxtries: int = 6):
         # server initialisation

@@ -1,18 +1,20 @@
 import zmq
 
+
 class wordleClient:
+
     def __init__(self, wordList, maxtries):
         context = zmq.Context()
         self.client = context.socket(zmq.PAIR)
         self.client.connect("tcp://localhost:5555")
-        
+
         self.wordList = wordList
         self.maxtries = maxtries
-        
+
     def start(self):
         while True:
             if self.wordList == [] or self.maxtries == 0:
-                print("max tries 0 or words list have no words")
+                print("Max tries 0 or words list have no words")
                 break
 
             # send input to server
