@@ -1,4 +1,5 @@
-from backend import wordle
+from server import wordleServer
+from client import wordleClient
 import zmq
 import threading
 
@@ -6,11 +7,11 @@ if __name__ == "__main__":
     # configuration
     words = ["hello", "world", "fresh", "crazy", "quite", "fancy"]
     maxtries = 6
-    
+
     # server initialisation
-    wordleObj = wordle(wordList=words, maxtries=maxtries)
-    wordleThread = threading.Thread(target=wordleObj.start)
-    wordleThread.start()
+    server = wordleServer(wordList=words, maxtries=maxtries)
+    serverThread = threading.Thread(target=server.start)
+    serverThread.start()
     
     # client initialisation
     context = zmq.Context()
@@ -43,4 +44,4 @@ if __name__ == "__main__":
             continue
         
     # terminate thread
-    wordleThread.join()
+    serverThread.join()
