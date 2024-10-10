@@ -50,6 +50,30 @@ class wordleClient:
             print("When playing, don't show your screen to the others")
             print("If your score ends up the same, then its a tie")
 
-            
-            for i in range(2):
+            counter = 0
+            playerNum = 2
+
+            while counter >= 0:
+                if counter >= 1000*playerNum:
+                    counter == 0
                 
+                player = counter % playerNum
+                wordInput = input("player", player, "Please input a word to the wordle: ")
+
+                self.client.send_json({player: wordInput})  
+                response = self.client.recv()
+
+                # if response from server is success, win the game
+                if response == "success":
+                    print("wordle success")
+                    break
+
+                # elif response from server is failed, lose the game
+                elif response == "failed":
+                    print("wordle fails")
+                    break
+
+                # else response from server something else, continue
+                else:
+                    print("player", player, "current score is: ", response)
+                    counter+=1
