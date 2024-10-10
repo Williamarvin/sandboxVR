@@ -45,7 +45,11 @@ class wordleClient:
 
         elif mode == "multi":
             # multi player
-            print("win within" + self.maxtries +
+            print("win within", str(self.maxtries),
                   "tries and get more points then your opponent")
             print("When playing, don't show your screen to the others")
             print("If your score ends up the same, then its a tie")
+
+            
+            for i in range(2):
+                
