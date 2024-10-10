@@ -1,17 +1,16 @@
 from typing import List
-from multiprocessing import Process
 import random
 import zmq
 
 
-class wordle(Process):
+class wordle():
     # initialise wordle class
     def __init__(self, wordList: List[str] = [], maxtries: int = 6):
         # server initialisation
         context = zmq.Context()
         self.server = context.socket(zmq.PAIR)
         self.server.bind("tcp://*:5555")
-        
+
         self.wordList = wordList
         self.maxtries = maxtries
 
@@ -79,9 +78,9 @@ class wordle(Process):
                 break
 
             # if guess is incorect then continue
-            elif i+1 == self.maxtries:
+            elif i + 1 == self.maxtries:
                 self.server.send_string("failed")
-            
+
             else:
                 self.server.send_string("continue")
 
