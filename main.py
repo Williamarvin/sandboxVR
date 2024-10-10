@@ -11,9 +11,10 @@ if __name__ == "__main__":
     maxtries = 6
 
     wordleObj = wordle(wordList=words, maxtries=maxtries)
-
-    t1 = threading.Thread(target=wordleObj.start)
-    t1.start()
+    # client initialisation
+    context = zmq.Context()
+    client = context.socket(zmq.PAIR)
+    client.connect("tcp://localhost:5555")
 
     while True:
         if words == [] or maxtries == 0:
