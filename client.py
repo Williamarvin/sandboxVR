@@ -11,6 +11,16 @@ class wordleClient:
         self.wordList = wordList
         self.maxtries = maxtries
 
+    def printScore(self, playerData):
+        # Sort the dictionary by values in descending order
+        sorted_scores = sorted(playerData.items(),
+                               key=lambda item: item[1],
+                               reverse=True)
+
+        # Print the scores
+        for player, points in sorted_scores:
+            print(f"Player {player}: {points} points")
+
     def start(self):
 
         mode = input(
@@ -59,13 +69,14 @@ class wordleClient:
             counter = 0
 
             while counter >= 0:
-                if counter >= 1000*playerNum:
+                if counter >= 1000 * playerNum:
                     counter == 0
-                
-                player = counter % playerNum
-                wordInput = input("player", player, "Please input a word to the wordle: ")
 
-                self.client.send_json({player: wordInput})  
+                player = counter % playerNum
+                wordInput = input("player", player,
+                                  "Please input a word to the wordle: ")
+
+                self.client.send_json({player: wordInput})
                 response = self.client.recv()
 
                 # if response from server is success, win the game
@@ -84,4 +95,7 @@ class wordleClient:
 
                 else:
                     print("player", player, "current score is: ", response)
-                    counter+=1
+                    counter += 1
+
+            playerData = self.client.recv_json()
+            self.printScore(playerData)
