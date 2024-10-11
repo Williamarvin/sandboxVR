@@ -33,6 +33,8 @@ class wordleServer():
                 board.append('_')
 
         print(''.join(board))
+        return board
+    
     def countPoints(self, board) -> int:
         points = 0
 
@@ -45,6 +47,10 @@ class wordleServer():
                 points += 0
 
         return points
+
+    def printScore(self, score):
+        pass
+
 
     # check if the word input is hit, present or miss compared to answer
     def checker(self, wordInput, answer) -> List[int]:
@@ -108,6 +114,40 @@ class wordleServer():
         elif mode == "mutiple":
             playerNum = mode["mutiple"]
             playerData = {}
+
+            for round in range(self.maxtries):  
+                for num in range(playerNum):
+                    wordInput = self.server.recv_json()
+
+                    while wordInput not in self.wordList:
+                        self.server.send_string("error")
+                        wordInput = self.server.recv_string()
+
+                    # if guess is correct then return success
+                    if wordInput == answer:
+                        self.server.send_string("success")
+                        break
+
+                    # if guess is incorect then continue
+                    elif i + 1 == self.maxtries:
+                        self.server.send_string("failed")
+
+                    else:
+                        self.server.send_string("continue")
+
+                    # check for hit, present or miss to compare user input and answer
+                    output = self.checker(wordInput, answer)
+
+                    # print the board based on hit, present or miss
+                    board = self.drawBoard(output)
+                    point = self.countPoints(board=board)
+                    
+
+                    if wordInput.keys() in playerData:
+                        playerData[wordInput.keys()] = point
+                    else:
+                        playerData[wordInput.key()] += point
+            
 
         # exceed max tries
         self.server.send_string("failed")
