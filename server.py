@@ -48,8 +48,13 @@ class wordleServer():
 
         return points
 
-    def printScore(self, score):
-        pass
+    def printScore(self, scores):
+        # Sort the dictionary by values in descending order
+        sorted_scores = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+
+        # Print the scores
+        for player, points in sorted_scores:
+            print(f"Player {player}: {points} points")
 
 
     # check if the word input is hit, present or miss compared to answer
@@ -148,6 +153,7 @@ class wordleServer():
                     else:
                         playerData[wordInput.key()] += point
             
+            self.printScore(playerData)
 
         # exceed max tries
         self.server.send_string("failed")
