@@ -107,8 +107,8 @@ class wordleServer():
                 # print the board based on hit, present or miss
                 self.drawBoard(output)
 
-        elif mode == "mutiple":
-            playerNum = mode["mutiple"]
+        elif mode == "multi":
+            playerNum = mode["multi"]
             playerData = {}
 
             for round in range(self.maxtries):

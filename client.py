@@ -29,8 +29,8 @@ class wordleClient:
 
         if mode == "single":
             self.client.send_json({"single": 1})
-        else:
-            self.client.send_json({"mutiple", playerNum})
+        elif mode == "multi":
+            self.client.send_json({"multi": playerNum})
 
         if mode == "single":
             print("win within", str(self.maxtries), "tries")
