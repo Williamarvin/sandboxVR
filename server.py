@@ -70,37 +70,44 @@ class wordleServer():
     def start(self) -> bool:
         if self.wordList == [] or self.maxtries == 0:
             return False
+        
+        mode = self.server.recv_json()
 
         # choose random answer from wordList
         answer = random.choice(self.wordList)
 
-        for i in range(self.maxtries):
+        if "single" in mode:
+            for i in range(self.maxtries):
 
-            # wait for client answer
-            wordInput = self.server.recv_string()
-
-            # if client answer not in word list
-            while wordInput not in self.wordList:
-                self.server.send_string("error")
+                # wait for client answer
                 wordInput = self.server.recv_string()
 
-            # if guess is correct then return success
-            if wordInput == answer:
-                self.server.send_string("success")
-                break
+                # if client answer not in word list
+                while wordInput not in self.wordList:
+                    self.server.send_string("error")
+                    wordInput = self.server.recv_string()
 
-            # if guess is incorect then continue
-            elif i + 1 == self.maxtries:
-                self.server.send_string("failed")
+                # if guess is correct then return success
+                if wordInput == answer:
+                    self.server.send_string("success")
+                    break
 
-            else:
-                self.server.send_string("continue")
+                # if guess is incorect then continue
+                elif i + 1 == self.maxtries:
+                    self.server.send_string("failed")
 
-            # check for hit, present or miss to compare user input and answer
-            output = self.checker(wordInput, answer)
+                else:
+                    self.server.send_string("continue")
 
-            # print the board based on hit, present or miss
-            self.drawBoard(output)
+                # check for hit, present or miss to compare user input and answer
+                output = self.checker(wordInput, answer)
+
+                # print the board based on hit, present or miss
+                self.drawBoard(output)
+            
+        elif mode == "mutiple":
+            playerNum = mode["mutiple"]
+            playerData = {}
 
         # exceed max tries
         self.server.send_string("failed")
