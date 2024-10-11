@@ -15,6 +15,12 @@ class wordleClient:
 
         mode = input(
             "Input single for single player and multi for multi player: ")
+        playerNum = 2
+
+        if mode == "single":
+            self.client.send_json({"single": 1})
+        else:
+            self.client.send_json({"mutiple", playerNum})
 
         if mode == "single":
             print("win within", str(self.maxtries), "tries")
@@ -51,7 +57,6 @@ class wordleClient:
             print("If your score ends up the same, then its a tie")
 
             counter = 0
-            playerNum = 2
 
             while counter >= 0:
                 if counter >= 1000*playerNum:
@@ -74,6 +79,9 @@ class wordleClient:
                     break
 
                 # else response from server something else, continue
+                elif response == "error":
+                    continue
+
                 else:
                     print("player", player, "current score is: ", response)
                     counter+=1
