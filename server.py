@@ -33,6 +33,18 @@ class wordleServer():
                 board.append('_')
 
         print(''.join(board))
+    def countPoints(self, board) -> int:
+        points = 0
+
+        for i in board:
+            if i == "0":
+                points += 2
+            elif i == "?":
+                points += 1
+            else:
+                points += 0
+
+        return points
 
     # check if the word input is hit, present or miss compared to answer
     def checker(self, wordInput, answer) -> List[int]:
