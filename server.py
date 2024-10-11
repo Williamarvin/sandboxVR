@@ -113,7 +113,9 @@ class wordleServer():
 
             for round in range(self.maxtries):
                 for num in range(playerNum):
-                    wordInput = self.server.recv_json()
+                    response = self.server.recv_json()
+                    player = next(iter(response))
+                    wordInput = next(iter(response.values()))
 
                     while wordInput not in self.wordList:
                         self.server.send_string("error")
@@ -125,11 +127,9 @@ class wordleServer():
                         break
 
                     # if guess is incorect then continue
-                    elif i + 1 == self.maxtries:
+                    elif round + 1 == self.maxtries and num + 1 == playerNum:
                         self.server.send_string("failed")
-
-                    else:
-                        self.server.send_string("continue")
+                        break
 
                     # check for hit, present or miss to compare user input and answer
                     output = self.checker(wordInput, answer)
@@ -138,10 +138,12 @@ class wordleServer():
                     board = self.drawBoard(output)
                     point = self.countPoints(board=board)
 
-                    if wordInput.keys() in playerData:
-                        playerData[wordInput.keys()] = point
+                    if player in playerData:
+                        playerData[player] = point
                     else:
-                        playerData[wordInput.key()] += point
+                        playerData[player] += point
+                    
+                    self.server.send_string(str(playerData[player]))
 
             self.server.send_json(playerData)
 

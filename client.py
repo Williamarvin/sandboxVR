@@ -73,11 +73,11 @@ class wordleClient:
                     counter == 0
 
                 player = counter % playerNum
-                wordInput = input("player", player,
-                                  "Please input a word to the wordle: ")
+                wordInput = input(f"player {player} please input a word to the wordle: ")
 
                 self.client.send_json({player: wordInput})
-                response = self.client.recv()
+                response = self.client.recv_string()
+                print(response)
 
                 # if response from server is success, win the game
                 if response == "success":
