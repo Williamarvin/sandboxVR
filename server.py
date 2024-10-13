@@ -1,7 +1,7 @@
 from typing import List
 import random
 import zmq
-
+import sys
 
 class wordleServer():
     # initialise wordle class
@@ -77,46 +77,14 @@ class wordleServer():
 
         # choose random answer from wordList
         answer = random.choice(self.wordList)
+        try:
+            if "single" in mode:
+                for i in range(self.maxtries):
 
-        if "single" in mode:
-            for i in range(self.maxtries):
-
-                # wait for client answer
-                wordInput = self.server.recv_string()
-
-                # if client answer not in word list
-                while wordInput not in self.wordList:
-                    self.server.send_string("error")
+                    # wait for client answer
                     wordInput = self.server.recv_string()
 
-                # if guess is correct then return success
-                if wordInput == answer:
-                    self.server.send_string("success")
-                    break
-
-                # if guess is incorect then continue
-                elif i + 1 == self.maxtries:
-                    self.server.send_string("failed")
-
-                else:
-                    self.server.send_string("continue")
-
-                # check for hit, present or miss to compare user input and answer
-                output = self.checker(wordInput, answer)
-
-                # print the board based on hit, present or miss
-                self.drawBoard(output)
-
-        elif mode == "multi":
-            playerNum = mode["multi"]
-            playerData = {}
-
-            for round in range(self.maxtries):
-                for num in range(playerNum):
-                    response = self.server.recv_json()
-                    player = next(iter(response))
-                    wordInput = next(iter(response.values()))
-
+                    # if client answer not in word list
                     while wordInput not in self.wordList:
                         self.server.send_string("error")
                         wordInput = self.server.recv_string()
@@ -127,25 +95,69 @@ class wordleServer():
                         break
 
                     # if guess is incorect then continue
-                    elif round + 1 == self.maxtries and num + 1 == playerNum:
+                    elif i + 1 == self.maxtries:
                         self.server.send_string("failed")
-                        break
+
+                    else:
+                        self.server.send_string("continue")
 
                     # check for hit, present or miss to compare user input and answer
                     output = self.checker(wordInput, answer)
 
                     # print the board based on hit, present or miss
-                    board = self.drawBoard(output)
-                    point = self.countPoints(board=board)
+                    self.drawBoard(output)
 
-                    if player in playerData:
-                        playerData[player] = point
-                    else:
-                        playerData[player] += point
+            elif "multi" in mode:
+                playerNum = mode["multi"]
+                playerData = {i: 0 for i in range(playerNum)}
+
+                for round in range(self.maxtries):
+                    for num in range(playerNum):
+                        response = self.server.recv_json()
+                        player = next(iter(response))
+                        wordInput = next(iter(response.values()))
+
+                        while wordInput not in self.wordList:
+                            self.server.send_string("error")
+                            response = self.server.recv_json()
+                            wordInput = next(iter(response.values()))
+
+                        # if guess is correct then return success
+                        if wordInput == answer:
+                            playerData[player] = 10
+                            self.server.send_string("success")
+                            break
+
+                        # # if guess is incorect then continue
+                        # elif round + 1 == self.maxtries and num + 1 == playerNum:
+                        #     self.server.send_string("failed")
+                        #     break
+
+                        # check for hit, present or miss to compare user input and answer
+                        output = self.checker(wordInput, answer)
+
+                        # print the board based on hit, present or miss
+                        board = self.drawBoard(output)
+                        point = self.countPoints(board=board)
+
+                        if player not in playerData:
+                            playerData[player] = point
+                        else:
+                            newPoint = playerData[player]
+                            newPoint += point
+                            playerData[player] = newPoint
+                        
+                        self.server.send_string(str(playerData[player]))
                     
-                    self.server.send_string(str(playerData[player]))
+                    if wordInput == answer or (round + 1 == self.maxtries and num + 1 == playerNum):
+                        break
 
-            self.server.send_json(playerData)
+                self.server.send_json(playerData)
 
-        # exceed max tries
-        self.server.send_string("failed")
+            # exceed max tries
+            self.server.send_string("failed")
+        except KeyboardInterrupt as e:
+            print("\nGame interrupted. Exiting gracefully.")
+            self.context.destroy()
+            self.server.close()
+            sys.exit()
