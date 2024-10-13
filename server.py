@@ -109,7 +109,7 @@ class wordleServer():
 
             elif "multi" in mode:
                 playerNum = mode["multi"]
-                playerData = {i: 0 for i in range(playerNum)}
+                playerData = {"player " + str(i): 0 for i in range(playerNum)}
 
                 for round in range(self.maxtries):
                     for num in range(playerNum):
@@ -139,6 +139,7 @@ class wordleServer():
                         # print the board based on hit, present or miss
                         board = self.drawBoard(output)
                         point = self.countPoints(board=board)
+                        player = "player " + str(player)
 
                         if player not in playerData:
                             playerData[player] = point
@@ -152,10 +153,13 @@ class wordleServer():
                     if wordInput == answer or (round + 1 == self.maxtries and num + 1 == playerNum):
                         break
 
+
+                # exceed max tries
+                # self.server.send_string("failed")
+
                 self.server.send_json(playerData)
 
-            # exceed max tries
-            self.server.send_string("failed")
+
         except KeyboardInterrupt as e:
             print("\nGame interrupted. Exiting gracefully.")
             self.context.destroy()
