@@ -18,11 +18,8 @@ if __name__ == "__main__":
         client = wordleClient(wordList=wordList, maxtries=maxtries)
         client.start()
 
-        # clientThread = threading.Thread(target=client.start)
-        # clientThread.start()
-
         # terminate thread
         serverThread.join()
-        # clientThread.join()
+        
     except KeyboardInterrupt as e:
         sys.exit()

@@ -56,6 +56,7 @@ class wordleClient:
                     mode = input(
                         "Input single for single player and multi for multi player: ")  
 
+            # single player
             if mode == "single":
                 print("win within", str(self.maxtries), "tries")
 
@@ -83,8 +84,8 @@ class wordleClient:
                     else:
                         continue
 
+            # multi player
             elif mode == "multi":
-                # multi player
                 print("win within", str(self.maxtries),
                     "tries and get more points then your opponent")
                 print("When playing, don't show your screen to the others")
@@ -93,6 +94,7 @@ class wordleClient:
                 counter = 0
 
                 while counter >= 0:
+                    # Prevent integer overload
                     if counter >= 1000 * playerNum:
                         counter == 0
 
@@ -116,7 +118,7 @@ class wordleClient:
                         continue
 
                     else:
-                        print("player", player, "current score is: ", response)
+                        print(player, "current score is: ", response)
                         counter += 1
 
                 playerData = self.client.recv_json()
