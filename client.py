@@ -33,10 +33,27 @@ class wordleClient:
             "Input single for single player and multi for multi player: ")
         playerNum = 2
 
-        if mode == "single":
-            self.client.send_json({"single": 1})
-        elif mode == "multi":
-            self.client.send_json({"multi": playerNum})
+        try:
+            while True:
+                if mode == "single":
+                    self.client.send_json({"single": 1})
+                    break
+                elif mode == "multi":
+                    while True:
+                        try:
+                            playerNum = int(input("Please input the number of people(1-10): "))
+
+                            if playerNum > 0 and playerNum <= 10:
+                                print("hello")
+                                self.client.send_json({"multi": playerNum})
+                                break
+                        except:
+                            print("Please input numbers from 1-10")
+
+                    break
+                else:
+                    mode = input(
+                        "Input single for single player and multi for multi player: ")  
 
         if mode == "single":
             print("win within", str(self.maxtries), "tries")

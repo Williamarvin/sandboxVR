@@ -7,8 +7,8 @@ class wordleServer():
     # initialise wordle class
     def __init__(self, wordList: List[str] = [], maxtries: int = 6):
         # server initialisation
-        context = zmq.Context()
-        self.server = context.socket(zmq.PAIR)
+        self.context = zmq.Context()
+        self.server = self.context.socket(zmq.PAIR)
         self.server.bind("tcp://*:5555")
 
         self.wordList = wordList
