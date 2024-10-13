@@ -17,9 +17,15 @@ class wordleClient:
                                key=lambda item: item[1],
                                reverse=True)
 
+        winner = True
+
         # Print the scores
         for player, points in sorted_scores:
-            print(f"Player {player}: {points} points")
+            if winner:
+                print(f"Player {player}: {points} points")
+                winner = False
+            else:
+                print(f"Player {player}: {points} points")
 
     def start(self):
 
