@@ -43,3 +43,13 @@
 #### High scores are stored in a text file, which works for small-scale games but doesn't scale well. A database solution could be considered for future development.
 
 # Development
+
+### File structure
+
+```
+├── server.py              # Contains the wordleServer class
+├── client.py              # Contains the wordleClient class
+├── highscore.txt          # File to store high scores
+├── main.py                # Script to run the server and client
+└── README.md              # Basic project description (optional)
+```

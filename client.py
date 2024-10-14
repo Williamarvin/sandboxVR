@@ -3,6 +3,7 @@ import zmq
 import sys
 import os
 
+
 class wordleClient:
     """Wordle client class to interact with the Wordle server."""
 
@@ -43,7 +44,6 @@ class wordleClient:
             else:
                 print(f"{player}: {points} points")
 
-
     def start(self):
         """Start the Wordle game session for the client."""
 
@@ -65,7 +65,10 @@ class wordleClient:
                 elif mode == "multi":
                     while True:
                         try:
-                            playerNum = int(input("Please input the number of people(1-10): "))
+                            playerNum = int(
+                                input(
+                                    "Please input the number of people(1-10): "
+                                ))
 
                             if playerNum > 0 and playerNum <= 10:
                                 self.client.send_json({"multi": playerNum})
@@ -76,7 +79,8 @@ class wordleClient:
                     break
                 else:
                     mode = input(
-                        "Input single for single player and multi for multi player: ")  
+                        "Input single for single player and multi for multi player: "
+                    )
 
             # single player
             if mode == "single":
@@ -109,7 +113,7 @@ class wordleClient:
             # multi player
             elif mode == "multi":
                 print("win within", str(self.maxtries),
-                    "tries and get more points then your opponent")
+                      "tries and get more points then your opponent")
                 print("When playing, don't show your screen to the others")
                 print("If your score ends up the same, then its a tie")
 
@@ -121,7 +125,8 @@ class wordleClient:
                         counter == 0
 
                     player = counter % playerNum
-                    wordInput = input(f"player {player} please input a word to the wordle: ")
+                    wordInput = input(
+                        f"player {player} please input a word to the wordle: ")
 
                     self.client.send_json({player: wordInput})
                     response = self.client.recv_string()
@@ -135,16 +140,16 @@ class wordleClient:
                     elif response == "failed":
                         print("wordle fails")
                         break
-                    
+
                     # if response from server is error, don't count the round
                     elif response == "error":
                         continue
-                    
+
                     # Next person/round and print the player score
                     else:
                         print("player", player, "current score is: ", response)
                         counter += 1
-                
+
                 # receive player data from server
                 playerData = self.client.recv_json()
                 self.printScore(playerData)
@@ -160,4 +165,3 @@ class wordleClient:
             print("\nGame interrupted. Exiting gracefully.")
             self.client.close()
             self.context.term()
-
