@@ -122,12 +122,6 @@ class wordleServer():
                             response = self.server.recv_json()
                             wordInput = next(iter(response.values()))
 
-                        # if guess is correct then return success
-                        if wordInput == answer:
-                            playerData[player] = 10
-                            self.server.send_string("success")
-                            break
-
                         # check for hit, present or miss to compare user input and answer
                         output = self.checker(wordInput, answer)
 
@@ -136,20 +130,25 @@ class wordleServer():
                         point = self.countPoints(board=board)
                         player = "player " + str(player)
 
-                        if player not in playerData:
-                            playerData[player] = point
-                        else:
-                            newPoint = playerData[player]
-                            newPoint += point
-                            playerData[player] = newPoint
-                        
-                        self.server.send_string(str(playerData[player]))
+                        newPoint = playerData[player]
+                        newPoint += point
+                        playerData[player] = newPoint
                     
-                    if wordInput == answer:
-                        break
+                        # if guess is correct then return success
+                        if wordInput == answer:
+                            playerData[player] = 10
+                            self.server.send_string("success")
+                            break
 
-                # exceed max tries
-                self.server.send_string("failed")
+                        # if guess is incorect after maxtries
+                        elif round + 1 == self.maxtries and num + 1 == playerNum:
+                            self.server.send_string("failed")
+                            break
+
+                        self.server.send_string(str(playerData[player]))   
+
+                    if wordInput == answer or round + 1 == self.maxtries:
+                        break
 
                 self.server.send_json(playerData)
 
