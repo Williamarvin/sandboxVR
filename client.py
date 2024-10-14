@@ -22,10 +22,10 @@ class wordleClient:
         # Print the scores
         for player, points in sorted_scores:
             if winner:
-                print(f"Player {player}: {points} points")
+                print(f"{player} wins: {points} points")
                 winner = False
             else:
-                print(f"Player {player}: {points} points")
+                print(f"{player}: {points} points")
 
 
     def start(self):
@@ -122,7 +122,7 @@ class wordleClient:
                         continue
 
                     else:
-                        print(player, "current score is: ", response)
+                        print("player", player, "current score is: ", response)
                         counter += 1
 
                 playerData = self.client.recv_json()
