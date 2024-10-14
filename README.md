@@ -51,5 +51,15 @@
 ├── client.py              # Contains the wordleClient class
 ├── highscore.txt          # File to store high scores
 ├── main.py                # Script to run the server and client
-└── README.md              # Basic project description (optional)
+└── README.md              # Basic project description
 ```
+
+### Why thread?
+
+#### Server and client is launched differently. For the server, threads are used so that I can use the main script to run both files. For the client, it is ran in the main thread.
+
+#### Since the game primarily involves I/O-bound tasks (server-client communication, handling player input), threads are a suitable choice. However, if the game logic becomes more computationally intensive, using multiprocessing might be a better option to fully utilize multiple CPU cores.
+
+### Which task is done?
+
+### Completed: Task 1, Task 2, Task 4, Bonus (Highest Score Storage)
