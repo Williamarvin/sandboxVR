@@ -1,1 +1,1 @@
-Highest Value: 10
+Highest Score: 10
