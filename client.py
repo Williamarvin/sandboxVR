@@ -138,7 +138,6 @@ class wordleClient:
 
                     # if response from server is failed, lose the game
                     elif response == "failed":
-                        print("wordle fails")
                         break
 
                     # if response from server is error, don't count the round
