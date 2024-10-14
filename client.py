@@ -1,9 +1,18 @@
 import zmq
 import sys
+from typing import List
 
 class wordleClient:
+    """Wordle client class to interact with the Wordle server."""
 
-    def __init__(self, wordList, maxtries):
+    def __init__(self, wordList: List[str], maxtries: int):
+        """
+        Initialize the Wordle client.
+
+        Args:
+            wordList (List[str]): List of valid words for the game.
+            maxtries (int): Maximum number of tries allowed.
+        """
         self.context = zmq.Context()
         self.client = self.context.socket(zmq.PAIR)
         self.client.connect("tcp://localhost:5555")
@@ -11,7 +20,13 @@ class wordleClient:
         self.wordList = wordList
         self.maxtries = maxtries
 
-    def printScore(self, playerData):
+    def printScore(self, playerData: dict):
+        """
+        Print the scores of all players.
+
+        Args:
+            playerData (dict): Dictionary containing player scores.
+        """
         # Sort the dictionary by values in descending order
         sorted_scores = sorted(playerData.items(),
                                key=lambda item: item[1],
@@ -29,6 +44,7 @@ class wordleClient:
 
 
     def start(self):
+        """Start the Wordle game session for the client."""
 
         # print the highest score
         with open("highscore.txt", "r") as f:
@@ -113,18 +129,21 @@ class wordleClient:
                         print("wordle success")
                         break
 
-                    # elif response from server is failed, lose the game
+                    # if response from server is failed, lose the game
                     elif response == "failed":
                         print("wordle fails")
                         break
-
+                    
+                    # if response from server is error, don't count the round
                     elif response == "error":
                         continue
-
+                    
+                    # Next person/round and print the player score
                     else:
                         print("player", player, "current score is: ", response)
                         counter += 1
-
+                
+                # receive player data from server
                 playerData = self.client.recv_json()
                 self.printScore(playerData)
 

@@ -4,8 +4,17 @@ import zmq
 import sys
 
 class wordleServer():
-    # initialise wordle class
+    """Wordle server class to manage the game logic and communication with clients."""  
+
     def __init__(self, wordList: List[str] = [], maxtries: int = 6):
+        """
+        Initialize the Wordle server.
+
+        Args:
+            wordList (List[str]): List of valid words for the game.
+            maxtries (int): Maximum number of tries allowed.
+        """
+
         # server initialisation
         self.context = zmq.Context()
         self.server = self.context.socket(zmq.PAIR)
@@ -14,8 +23,16 @@ class wordleServer():
         self.wordList = wordList
         self.maxtries = maxtries
 
-    # Draw board based on user input
-    def drawBoard(self, indexList: List[int] = []):
+    def drawBoard(self, indexList: List[int] = []) -> List[str]:
+        """
+        Draw the game board based on hit, present, and miss status.
+
+        Args:
+            indexList (List[int]): List indicating the status of each letter (0, 1, 2).
+
+        Returns:
+            List[str]: Board representation.
+        """
         board = []
 
         # HIT 0 = 0
@@ -34,8 +51,17 @@ class wordleServer():
 
         print(''.join(board))
         return board
+    
+    def countPoints(self, board: List[str]) -> int:
+        """
+        Calculate points for the current round.
 
-    def countPoints(self, board) -> int:
+        Args:
+            board (List[str]): Board representation.
+
+        Returns:
+            int: Points for the round.
+        """
         points = 0
 
         for i in board:
@@ -49,7 +75,17 @@ class wordleServer():
         return points
 
     # check if the word input is hit, present or miss compared to answer
-    def checker(self, wordInput, answer) -> List[int]:
+    def checker(self, wordInput: str, answer: str) -> List[int]:
+        """
+        Check the user's input against the answer to determine hit, present, or miss.
+
+        Args:
+            wordInput (str): User's word guess.
+            answer (str): Correct answer word.
+
+        Returns:
+            List[int]: List indicating the status of each letter (0, 1, 2).
+        """
         output = []
         # check if hit, present or miss
         for index in range(5):
@@ -70,6 +106,12 @@ class wordleServer():
 
     # Start wordle game
     def start(self) -> bool:
+        """
+        Start the Wordle game session.
+
+        Returns:
+            bool: False if game cannot start, otherwise continues the game loop.
+        """
         if self.wordList == [] or self.maxtries == 0:
             return False
 
@@ -94,10 +136,11 @@ class wordleServer():
                         self.server.send_string("success")
                         break
 
-                    # if guess is incorect then continue
+                    # if guess is more than the max tries return failed
                     elif i + 1 == self.maxtries:
                         self.server.send_string("failed")
 
+                    # if guess is incorect then continue
                     else:
                         self.server.send_string("continue")
 
@@ -110,8 +153,10 @@ class wordleServer():
             elif "multi" in mode:
                 playerNum = mode["multi"]
                 playerData = {"player " + str(i): 0 for i in range(playerNum)}
-
+                
+                # The number of tries allowed
                 for round in range(self.maxtries):
+                    # Iterate each player playing at the round
                     for num in range(playerNum):
                         response = self.server.recv_json()
                         player = next(iter(response))
@@ -144,12 +189,14 @@ class wordleServer():
                         elif round + 1 == self.maxtries and num + 1 == playerNum:
                             self.server.send_string("failed")
                             break
-
+                        
                         self.server.send_string(str(playerData[player]))   
 
+                    # Break the second loop
                     if wordInput == answer or round + 1 == self.maxtries:
                         break
-
+                
+                # send player data to client
                 self.server.send_json(playerData)
 
 
