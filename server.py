@@ -128,11 +128,6 @@ class wordleServer():
                             self.server.send_string("success")
                             break
 
-                        # # if guess is incorect then continue
-                        # elif round + 1 == self.maxtries and num + 1 == playerNum:
-                        #     self.server.send_string("failed")
-                        #     break
-
                         # check for hit, present or miss to compare user input and answer
                         output = self.checker(wordInput, answer)
 
@@ -150,12 +145,11 @@ class wordleServer():
                         
                         self.server.send_string(str(playerData[player]))
                     
-                    if wordInput == answer or (round + 1 == self.maxtries and num + 1 == playerNum):
+                    if wordInput == answer:
                         break
 
-
                 # exceed max tries
-                # self.server.send_string("failed")
+                self.server.send_string("failed")
 
                 self.server.send_json(playerData)
 
