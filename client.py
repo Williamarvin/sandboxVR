@@ -1,6 +1,7 @@
+from typing import List
 import zmq
 import sys
-from typing import List
+import os
 
 class wordleClient:
     """Wordle client class to interact with the Wordle server."""
@@ -47,9 +48,10 @@ class wordleClient:
         """Start the Wordle game session for the client."""
 
         # print the highest score
-        with open("highscore.txt", "r") as f:
-            content = f.read()
-            print(content)
+        if os.path.exists("highscore.txt"):
+            with open("highscore.txt", "r") as f:
+                content = f.read()
+                print(content)
 
         mode = input(
             "Input single for single player and multi for multi player: ")
