@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
         # terminate thread
         serverThread.join()
-        
+
     except KeyboardInterrupt as e:
         serverThread.join()
         sys.exit()

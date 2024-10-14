@@ -3,8 +3,9 @@ import random
 import zmq
 import sys
 
+
 class wordleServer():
-    """Wordle server class to manage the game logic and communication with clients."""  
+    """Wordle server class to manage the game logic and communication with clients."""
 
     def __init__(self, wordList: List[str] = [], maxtries: int = 6):
         """
@@ -51,7 +52,7 @@ class wordleServer():
 
         print(''.join(board))
         return board
-    
+
     def countPoints(self, board: List[str]) -> int:
         """
         Calculate points for the current round.
@@ -153,7 +154,7 @@ class wordleServer():
             elif "multi" in mode:
                 playerNum = mode["multi"]
                 playerData = {"player " + str(i): 0 for i in range(playerNum)}
-                
+
                 # The number of tries allowed
                 for round in range(self.maxtries):
                     # Iterate each player playing at the round
@@ -178,7 +179,7 @@ class wordleServer():
                         newPoint = playerData[player]
                         newPoint += point
                         playerData[player] = newPoint
-                    
+
                         # if guess is correct then return success
                         if wordInput == answer:
                             playerData[player] = 10
@@ -189,16 +190,15 @@ class wordleServer():
                         elif round + 1 == self.maxtries and num + 1 == playerNum:
                             self.server.send_string("failed")
                             break
-                        
-                        self.server.send_string(str(playerData[player]))   
+
+                        self.server.send_string(str(playerData[player]))
 
                     # Break the second loop
                     if wordInput == answer or round + 1 == self.maxtries:
                         break
-                
+
                 # send player data to client
                 self.server.send_json(playerData)
-
 
         except KeyboardInterrupt as e:
             print("\nGame interrupted. Exiting gracefully.")
