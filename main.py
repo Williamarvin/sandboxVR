@@ -6,7 +6,7 @@ import sys
 if __name__ == "__main__":
     # configuration
     wordList = ["hello", "world", "fresh", "crazy", "quite", "fancy"]
-    maxtries = 6
+    maxtries = 2
 
     try:
         # server initialisation
@@ -22,4 +22,5 @@ if __name__ == "__main__":
         serverThread.join()
         
     except KeyboardInterrupt as e:
+        serverThread.join()
         sys.exit()
