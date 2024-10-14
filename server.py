@@ -155,6 +155,5 @@ class wordleServer():
 
         except KeyboardInterrupt as e:
             print("\nGame interrupted. Exiting gracefully.")
-            self.context.destroy()
-            self.server.close()
-            sys.exit()
+            self.server.destroy()
+            self.context.term()
