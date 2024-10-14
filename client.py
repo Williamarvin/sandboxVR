@@ -30,6 +30,11 @@ class wordleClient:
 
     def start(self):
 
+        # print the highest score
+        with open("highscore.txt", "r") as f:
+            content = f.read()
+            print(content)
+
         mode = input(
             "Input single for single player and multi for multi player: ")
         playerNum = 0
@@ -45,7 +50,6 @@ class wordleClient:
                             playerNum = int(input("Please input the number of people(1-10): "))
 
                             if playerNum > 0 and playerNum <= 10:
-                                print("hello")
                                 self.client.send_json({"multi": playerNum})
                                 break
                         except:
@@ -123,6 +127,13 @@ class wordleClient:
 
                 playerData = self.client.recv_json()
                 self.printScore(playerData)
+
+                # Find the highest numbered value in the dictionary
+                max_value = max(playerData.values())
+
+                # Open the file and write the highest value
+                with open("highscore.txt", "a") as f:
+                    f.write("Highest Score: " + str(max_value) + "\n")
 
         except KeyboardInterrupt as e:
             print("\nGame interrupted. Exiting gracefully.")
