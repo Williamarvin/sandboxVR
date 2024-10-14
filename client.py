@@ -157,9 +157,21 @@ class wordleClient:
                 # Find the highest numbered value in the dictionary
                 max_value = max(playerData.values())
 
-                # Open the file and write the highest value
-                with open("highscore.txt", "a") as f:
-                    f.write("Highest Score: " + str(max_value) + "\n")
+                # Read the existing content
+                with open("highscore.txt", "r") as f:
+                    content = f.readlines()
+
+                # Extract the current highest score from the first line
+                current_high_score = int(content[0].strip().split(": ")[1])
+
+                # Check if the new score is greater than the current highest score
+                if max_value > current_high_score:
+                    # Update the first line with the new highest score
+                    content[0] = "Highest Score: " + str(max_value) + "\n"
+
+                    # Write the updated content back to the file
+                    with open("highscore.txt", "w") as f:
+                        f.writelines(content)
 
         except KeyboardInterrupt as e:
             print("\nGame interrupted. Exiting gracefully.")
