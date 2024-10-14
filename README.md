@@ -63,3 +63,10 @@
 ### Which task is done?
 
 ### Completed: Task 1, Task 2, Task 4, Bonus (Highest Score Storage)
+
+### TODO
+
+1. Task 3 is not implemented
+2. Shutting down gracefully is not complete, some bugs are still present
+3. Adding a user interface for the users
+4. Optimising code
