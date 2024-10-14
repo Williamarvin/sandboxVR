@@ -4,7 +4,6 @@ import sys
 import os
 
 
-
 class wordleClient:
     """Wordle client class to interact with the Wordle server."""
 
